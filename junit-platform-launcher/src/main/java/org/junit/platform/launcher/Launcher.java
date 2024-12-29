@@ -127,4 +127,27 @@ public interface Launcher {
 	@API(status = STABLE, since = "1.4")
 	void execute(TestPlan testPlan, TestExecutionListener... listeners);
 
+	/**
+	 * Execute the tests asynchronously according to the supplied {@link LauncherDiscoveryRequest}
+	 * and notify the registered listeners about the progress and results of the execution.
+	 *
+	 * @param launcherDiscoveryRequest the launcher discovery request; never {@code null}
+	 * @param listeners additional test execution listeners; never {@code null}
+	 * @return a {@link TestExecutionControl} object to control the execution
+	 * @since 5.12
+	 */
+	TestExecutionControl executeAsync(LauncherDiscoveryRequest launcherDiscoveryRequest,
+			TestExecutionListener... listeners);
+
+	/**
+	 * Execute the supplied {@link TestPlan} asynchronously and notify the registered listeners
+	 * about the progress and results of the execution.
+	 *
+	 * @param testPlan the test plan to execute; never {@code null}
+	 * @param listeners additional test execution listeners; never {@code null}
+	 * @return a {@link TestExecutionControl} object to control the execution
+	 * @since 5.12
+	 */
+	TestExecutionControl executeAsync(TestPlan testPlan, TestExecutionListener... listeners);
+
 }
