@@ -508,7 +508,7 @@ public interface ExtensionContext {
 		 */
 		@Deprecated
 		@API(status = DEPRECATED, since = "5.1")
-		interface CloseableResource extends AutoCloseable{
+		interface CloseableResource extends AutoCloseable {
 
 			/**
 			 * Close underlying resources.
