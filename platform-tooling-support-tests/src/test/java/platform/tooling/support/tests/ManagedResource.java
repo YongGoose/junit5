@@ -25,6 +25,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.support.HierarchyTraversalMode;
 import org.junit.platform.commons.support.ReflectionSupport;
@@ -100,6 +101,7 @@ public @interface ManagedResource {
 		}
 	}
 
+	@SuppressWarnings({ "deprecation", "try" })
 	class Resource<T> implements CloseableResource {
 
 		private final T value;
@@ -115,8 +117,15 @@ public @interface ManagedResource {
 		}
 
 		@Override
-		public void close() throws Throwable {
-			((AutoCloseable) value).close();
+		public void close() throws Exception {
+			try {
+				((AutoCloseable) value).close();
+			}
+			catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				throw new JUnitException("Resource close interrupted", e);
+			}
+
 		}
 	}
 }

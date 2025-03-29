@@ -506,6 +506,7 @@ public interface ExtensionContext {
 		 * @since 5.1
 		 * @deprecated without replacement in 5.13
 		 */
+		@SuppressWarnings("try")
 		@Deprecated
 		@API(status = DEPRECATED, since = "5.1")
 		interface CloseableResource extends AutoCloseable {
@@ -513,7 +514,7 @@ public interface ExtensionContext {
 			/**
 			 * Close underlying resources.
 			 *
-			 * @throws Exception any throwable will be caught and rethrown
+			 * @throws Exception any exception will be caught and rethrown
 			 */
 			void close() throws Exception;
 

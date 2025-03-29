@@ -21,6 +21,7 @@ import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.aggregator.DefaultArgumentsAccessor;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.support.ParameterDeclarations;
+import org.junit.platform.commons.JUnitException;
 
 class ParameterizedInvocationContext<T extends ParameterizedDeclarationContext<?>> {
 
@@ -76,6 +77,7 @@ class ParameterizedInvocationContext<T extends ParameterizedDeclarationContext<?
 		new DefaultParameterInfo(declarations, accessor).store(context);
 	}
 
+	@SuppressWarnings({ "deprecation", "try" })
 	private static class CloseableArgument implements ExtensionContext.Store.CloseableResource {
 
 		private final AutoCloseable autoCloseable;
@@ -85,8 +87,15 @@ class ParameterizedInvocationContext<T extends ParameterizedDeclarationContext<?
 		}
 
 		@Override
-		public void close() throws Throwable {
-			this.autoCloseable.close();
+		public void close() throws Exception {
+			try {
+				this.autoCloseable.close();
+			}
+			catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				throw new JUnitException("AutoCloseable argument close interrupted", e);
+			}
+
 		}
 
 	}
